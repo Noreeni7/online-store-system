@@ -3,7 +3,7 @@
 require_once '../includes/db_connect.php';
 
 try {
-    $query = "INSERT INTO products (name, description, price, image) VALUES (:name, :description, :price, :image);";
+    $query = "INSERT INTO products (name, description, price, image) VALUES (:name, :description, :price, :image) ON DUPLICATE KEY UPDATE description = VALUES(description), price = VALUES(price), image = VALUES(image);";
     $stmt = $conn->prepare($query); 
     $products = [
         [
