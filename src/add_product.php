@@ -24,6 +24,18 @@ try {
             'price' => '2500.00',
             'image' => 'https://images.unsplash.com/photo-1525966222134-fcfa99b8ae77?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8c2hvZXN8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&q=60&w=500'
         ],
+        [
+            'name' => 'Nike shoes',
+            'description' => '',
+            'price' => '2500.00',
+            'image' => 'https://images.unsplash.com/photo-1606107557195-0e29a4b5b4aa?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=464'
+        ],
+        [
+            'name' => 'Running shoes',
+            'description' => '',
+            'price' => '2500.00',
+            'image' => 'https://images.unsplash.com/photo-1560769629-975ec94e6a86?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8c2hvZXN8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&q=60&w=500'
+        ],
     ];
 
     foreach ($products as $product) {
