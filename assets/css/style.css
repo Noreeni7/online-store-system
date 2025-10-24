@@ -1,5 +1,5 @@
 .card-img-top {
   width: 100%;
-  height: 40vh; /* adjust height to fit your layout */
-  object-fit: cover; /* keeps image centered & fills space */
+  height: 40vh; 
+  object-fit: cover; 
 }
