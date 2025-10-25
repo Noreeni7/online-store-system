@@ -20,7 +20,7 @@ try {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Document</title>
+    <title>MyStore</title>
 
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
@@ -36,10 +36,20 @@ try {
     <nav class="navbar navbar-expand-lg bg-dark">
         <div class="container-fluid">
             <a class="navbar-brand text-white" href="#">MyStore</a>
+            <div>
+                <a href="cart.php" class="btn btn-outline-light me-2">🛒 Cart</a>
+                <a href="login.php" class="btn btn-outline-light">Login</a>
+            </div>
         </div>
     </nav>
 
-    <!-- Main -->
+    <!-- HERO SECTION -->
+    <div class="hero p-5 text-center rounded mb-4">
+        <h1>Welcome to MyStore!</h1>
+        <p class="lead">Find the best products at amazing prices.</p>
+    </div>
+
+    <!-- MAIN SECTION -->
     <div class="container mt-5">
         <div class="d-flex justify-content-center flex-wrap gap-4">
 
@@ -53,16 +63,20 @@ try {
                         <h5 class="card-title"><?php echo htmlspecialchars($product['name']); ?></h5>
                         <p class="card-text"><?php echo htmlspecialchars($product['description']); ?></p>
                         <p class="card-text">Price: <?php echo htmlspecialchars($product['price']); ?></p>
+                        <a href="cart.php?id=<?= $product['id'] ?>" class="btn btn-primary">Add to Cart</a>
                     </div>
                 </div>
             <?php
             }
             ?>
+
         </div>
     </div>
 
+    <footer class="bg-dark text-light text-center py-3 mt-5">
+        &copy; <?= date('Y'); ?> MyStore. All rights reserved.
+    </footer>
 
 </body>
 
 </html>
-                

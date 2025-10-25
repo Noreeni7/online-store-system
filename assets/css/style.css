@@ -3,3 +3,7 @@
   height: 40vh; 
   object-fit: cover; 
 }
+
+.hero{
+  background-color: rgb(179, 179, 25);
+}
