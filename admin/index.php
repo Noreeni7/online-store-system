@@ -1,3 +1,16 @@
+<?php
+
+session_start();
+
+$success_msg = $_SESSION['success_msg'] ?? '';
+$error_msg = $_SESSION['error_msg'] ?? '';
+
+unset($_SESSION['success_msg']);
+unset($_SESSION['error_msg']);
+
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -15,8 +28,17 @@
   </nav>
 
   <div class="mt-5 d-flex flex-column justify-content-center align-items-center">
-    <h1 mb-3>Welcome, Admin!</h1>
-    <p mb-3>Use the buttons below to manage your store.</p>
+    <!-- Display success or error messages -->
+     <?php if ($success_msg): ?>
+        <div class="alert alert-success"><?= htmlspecialchars($success_msg) ?></div>
+     <?php endif; ?>
+
+     <?php if ($error_msg): ?>
+        <div class="alert alert-danger"><?= htmlspecialchars($error_msg) ?></div>
+     <?php endif; ?>
+
+    <h1 class="mb-3">Welcome, Admin!</h1>
+    <p class="mb-3">Use the buttons below to manage your store.</p>
 
     <a href="products.php" class="btn btn-primary mb-3">Manage Products</a>
     <a href="add_product.php" class="btn btn-success">Add New Product</a>
