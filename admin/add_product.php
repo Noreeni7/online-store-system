@@ -2,48 +2,88 @@
 
 require_once '../includes/db_connect.php';
 
-try {
-    $query = "INSERT INTO products (name, description, price, image) VALUES (:name, :description, :price, :image) ON DUPLICATE KEY UPDATE description = VALUES(description), price = VALUES(price), image = VALUES(image);";
-    $stmt = $conn->prepare($query); 
-    $products = [
-        [
-            'name' => 'Air Force',
-            'description' => '',
-            'price' => '2000.00',
-            'image' => 'https://images.unsplash.com/photo-1549298916-b41d501d3772?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8c2hvZXN8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&q=60&w=500'
-        ],
-        [
-            'name' => 'Sports Shoes',
-            'description' => '',
-            'price' => '1000.00',
-            'image' => 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=870'
-        ],
-        [
-            'name' => 'Sneakers',
-            'description' => '',
-            'price' => '2500.00',
-            'image' => 'https://images.unsplash.com/photo-1525966222134-fcfa99b8ae77?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8c2hvZXN8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&q=60&w=500'
-        ],
-        [
-            'name' => 'Nike shoes',
-            'description' => '',
-            'price' => '2500.00',
-            'image' => 'https://images.unsplash.com/photo-1606107557195-0e29a4b5b4aa?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=464'
-        ],
-        [
-            'name' => 'Running shoes',
-            'description' => '',
-            'price' => '2500.00',
-            'image' => 'https://images.unsplash.com/photo-1560769629-975ec94e6a86?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8c2hvZXN8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&q=60&w=500'
-        ],
-    ];
+// ----- Initialize variables -----
+$name = $description = $price = $image = '';
+$success_msg = '';
+$error_msg = '';
 
-    foreach ($products as $product) {
-        $stmt->execute($product);
+// Check if the form was submitted
+if ($_SERVER["REQUEST_METHOD"] === "POST") {
+    $name = $_POST['name'];
+    $description = $_POST['description'];
+    $price = $_POST['price'];
+    $image = $_POST['image'];
+
+    if (empty($name) || empty($price) || empty($image)) {
+        echo '<div class="alert alert-danger mt-3">Name, price and image fiels required!</div>';
+    } else if (!is_numeric($price) || floatval($price) <= 0) {
+
+    }else {
+        try {
+        $query = "INSERT INTO products (name, description, price, image) VALUES (:name, :description, :price, :image) ON DUPLICATE KEY UPDATE description = VALUES(description), price = VALUES(price), image = VALUES(image);";
+        $stmt = $conn->prepare($query);
+        $stmt->bindParam(':name', $name);
+        $stmt->bindParam(':description', $description);
+        $stmt->bindParam(':price', $price);
+        $stmt->bindParam(':image', $image);
+
+        $stmt->execute();
+
+        $success_msg ='<div class="alert alert-success mt-3">Product added successfuly</div>';
+
+        die();
+
+    } catch (PDOException $e) {
+         // Log error, do not show raw DB error
+                error_log($e->getMessage());
+                $error_msg = "Something went wrong. Please try again later.";
+        header('Location: index.php');
+        die();
+    }
     }
 
-    echo "Product inserted successfully";
-
-} catch (PDOException $e) {
-    echo "Database error: " . htmlspecialchars($e->getMessage());
 }
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Product</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+</head>
+
+<body>
+
+    <div class="container">
+        <form action="" method="post">
+            <div class="mt-3">
+                <label class="form-label">Product Name</label>
+                <input type="text" name="name">
+            </div>
+
+            <div class="mt-3">
+                <label class="form-label">Description</label>
+                <input type="text" name="description">
+            </div>
+
+            <div class="mt-3">
+                <label class="form-label">Price</label>
+                <input type="text" name="price">
+            </div>
+
+            <div class="mt-3">
+                <label class="form-label">Image URL</label>
+                <input type="text" name="image">
+            </div>
+
+            <button type="submit" class="btn btn-primary mt-3">Add Product</button>
+        </form>
+    </div>
+
+</body>
+
+</html>
