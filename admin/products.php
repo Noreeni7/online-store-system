@@ -44,12 +44,11 @@ try {
             </tr>
         </thead>
  
-            <tbody>        
-        <?php
+            <tbody>     
 
-
-        foreach ($products as $product) {
-        ?>
+                <?php
+                    foreach ($products as $product) {
+                ?>
                 <tr>
                     <td><?php echo htmlspecialchars($product['id']); ?></td>
                     <td><?php echo htmlspecialchars($product['name']); ?></td>
@@ -61,13 +60,12 @@ try {
                         <a href="delete_product.php?id=<?php echo $product['id']; ?>">Delete</a>
                     </td>
                 </tr>
-        <?php
-        }
 
-        ?>
+                <?php
+                }
+                ?>
         
             </tbody>
-
     </table>
 
 </body>
