@@ -15,31 +15,27 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $image = $_POST['image'];
 
     if (empty($name) || empty($price) || empty($image)) {
-        echo '<div class="alert alert-danger mt-3">Name, price and image fiels required!</div>';
+        $error_msg = 'Name, price and image fields required!';
     } else if (!is_numeric($price) || floatval($price) <= 0) {
-
+        $error_msg = 'Price must be a number greater than 0';
     }else {
         try {
-        $query = "INSERT INTO products (name, description, price, image) VALUES (:name, :description, :price, :image) ON DUPLICATE KEY UPDATE description = VALUES(description), price = VALUES(price), image = VALUES(image);";
-        $stmt = $conn->prepare($query);
-        $stmt->bindParam(':name', $name);
-        $stmt->bindParam(':description', $description);
-        $stmt->bindParam(':price', $price);
-        $stmt->bindParam(':image', $image);
+            $query = "INSERT INTO products (name, description, price, image) VALUES (:name, :description, :price, :image) ON DUPLICATE KEY UPDATE description = VALUES(description), price = VALUES(price), image = VALUES(image);";
+            $stmt = $conn->prepare($query);
+            $stmt->bindParam(':name', $name);
+            $stmt->bindParam(':description', $description);
+            $stmt->bindParam(':price', $price);
+            $stmt->bindParam(':image', $image);
 
-        $stmt->execute();
+            $stmt->execute();
 
-        $success_msg ='<div class="alert alert-success mt-3">Product added successfuly</div>';
-
-        die();
-
-    } catch (PDOException $e) {
-         // Log error, do not show raw DB error
-                error_log($e->getMessage());
-                $error_msg = "Something went wrong. Please try again later.";
-        header('Location: index.php');
-        die();
-    }
+            $success_msg ='Product added successfuly!';
+            
+        } catch (PDOException $e) {
+            // Log error, do not show raw DB error
+                    error_log($e->getMessage());
+                    $error_msg = "Something went wrong. Please try again later";
+        }
     }
 
 }
@@ -59,25 +55,37 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 <body>
 
     <div class="container">
+
+        <!-- Display success or error messages -->
+        <?php if ($error_msg) { ?>
+                    <div class="alert alert-danger"><?= $error_msg ?></div>
+        <?php  }
+        ?>
+
+        <?php if ($success_msg): ?>
+            <div class="alert alert-success"><?= $success_msg?></div>
+        <?php endif
+        ?>
+
         <form action="" method="post">
             <div class="mt-3">
                 <label class="form-label">Product Name</label>
-                <input type="text" name="name">
+                <input type="text" name="name" value="<?= htmlspecialchars($name) ?>">
             </div>
 
             <div class="mt-3">
                 <label class="form-label">Description</label>
-                <input type="text" name="description">
+                <textarea name="description"><?= htmlspecialchars($description) ?></textarea>
             </div>
 
             <div class="mt-3">
                 <label class="form-label">Price</label>
-                <input type="text" name="price">
+                <input type="text" name="price" value="<?= htmlspecialchars($price) ?>">
             </div>
 
             <div class="mt-3">
                 <label class="form-label">Image URL</label>
-                <input type="text" name="image">
+                <input type="text" name="image" value="<?= htmlspecialchars($image) ?>">
             </div>
 
             <button type="submit" class="btn btn-primary mt-3">Add Product</button>
