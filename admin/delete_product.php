@@ -14,18 +14,18 @@ if (isset($_GET['id'])) {
         $stmt->execute();
 
         $_SESSION['success_msg'] = "Product deleted successfully";
-        header('Location: index.php');
+        header('Location: cart.php');
         die();
 
     } catch (PDOException $e) {
         error_log($e->getMessage());
         $_SESSION['error_msg'] = "Something went wrong. Please try again.";
-        header("Location: index.php");
+        header("Location: cart.php");
         exit;
     }
 }else{
     $_SESSION['error_msg'] = "Invalid request.";
-    header("Location: index.php");
+    header("Location: cart.php");
     exit();
 }
 

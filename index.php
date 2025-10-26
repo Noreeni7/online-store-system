@@ -46,7 +46,7 @@ try {
     <!-- HERO SECTION -->
     <div class="hero p-5 text-center rounded mb-4">
         <h1>Welcome to MyStore!</h1>
-        <p class="lead">Find the best products at amazing prices.</p>
+        <p class="lead">Find the best products.</p>
     </div>
 
     <!-- MAIN SECTION -->
