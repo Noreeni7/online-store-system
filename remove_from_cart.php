@@ -23,5 +23,5 @@ if ($ID) {
     }
 }
 
-header("Location: index.php");
+header("Location: cart.php");
 exit;

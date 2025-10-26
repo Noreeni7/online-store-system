@@ -63,7 +63,7 @@ try {
                         <h5 class="card-title"><?php echo htmlspecialchars($product['name']); ?></h5>
                         <p class="card-text"><?php echo htmlspecialchars($product['description']); ?></p>
                         <p class="card-text">Price: <?php echo htmlspecialchars($product['price']); ?></p>
-                        <a href="cart.php?id=<?= $product['id'] ?>" class="btn btn-primary">Add to Cart</a>
+                        <a href="add_to_cart.php?id=<?= $product['id'] ?>" class="btn btn-primary">Add to Cart</a>
                     </div>
                 </div>
             <?php
