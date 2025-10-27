@@ -11,26 +11,39 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $password = trim($_POST['password']);
     $confirm_password = trim($_POST['confirm_password']);
 
-    
+    // Vaidation
+    if (empty($name) || empty($email) || empty($password) || empty($confirm_password)) {
+        $error_msg = "Please fill all fields";
+    }
 
-    try {
-        $query = "INSERT INTO users (name, email, password) VALUES (:name, :email, :password)";
-        $stmt = $conn->prepare($query);
-        $hashed_password = password_hash($password, PASSWORD_DEFAULT);
-        $stmt->bindParam(':name', $name);
-        $stmt->bindParam(':email', $email);
-        $stmt->bindParam(':password', $hashed_password);
-        $stmt->execute();
+    if ($password !== $confirm_password) {
+        $error_msg = "Passwords do not match";
+    }
 
-    } catch (PDOException $e) {
-        error_log($e->getMessage());
+    if (!$error_msg) {
+        try { 
 
+            $query = "INSERT INTO users (name, email, password) VALUES (:name, :email, :password)";
+            $stmt = $conn->prepare($query);
+            $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+            $stmt->bindParam(':name', $name);
+            $stmt->bindParam(':email', $email);
+            $stmt->bindParam(':password', $hashed_password);
+            $stmt->execute();
+
+            $success_msg = "Registration successful!";
+            
+        } catch (PDOException $e) {
+            error_log($e->getMessage());
+            $success_msg = "Something went wrong. Please try again";
+        }
     }
 }
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -39,11 +52,21 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
 </head>
+
 <body>
-    
+
     <div class="d-flex justify-content-center align-items-center vh-100">
         <form class="p-4 border rounded shadow" style="width: 30vw;" method="post">
-        <h3 class="text-center mb-3">Register</h3>
+
+            <?php if ($success_msg) { ?>
+                <div class="alert alert-success"><?= htmlspecialchars($success_msg) ?></div>
+            <?php } ?>
+
+            <?php if ($error_msg) { ?>
+                <div class="alert alert-danger"><?= htmlspecialchars($error_msg) ?></div>
+            <?php } ?>
+
+            <h3 class="text-center mb-3">Register</h3>
             <div class="mt-3">
                 <label class="form-label">Name</label>
                 <input type="text" name="name" class="form-control" placeholder="Enter your name">
@@ -65,11 +88,12 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             </div>
 
             <div class="mt-3">
-            <button type="submit" class="btn btn-primary mt-3">Register</button>
+                <button type="submit" class="btn btn-primary mt-3">Register</button>
             </div>
 
         </form>
     </div>
 
 </body>
+
 </html>

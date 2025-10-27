@@ -98,10 +98,3 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 </body>
 
 </html>
-if (empty($name) || empty($email) || empty($password) || $confirm_password) {
-        $error_msg = "Please fill all fields";
-    }
-
-    if ($password !== $confirm_password) {
-        $error_msg = "Passwords do not match";
-    }
