@@ -77,6 +77,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     <div class="d-flex justify-content-center align-items-center vh-100">
         <form class="p-4 border rounded shadow" style="width: 30vw;" method="post">
 
+            <!-- Display message -->
             <?php if ($success_msg) { ?>
                 <div class="alert alert-success"><?= htmlspecialchars($success_msg) ?></div>
             <?php } ?>

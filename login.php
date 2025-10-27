@@ -1,5 +1,34 @@
 <?php
 
+require_once 'includes/db_connect.php';
+
+$success_msg = "";
+$error_msg = "";
+
+if ($_SERVER["REQUEST_METHOD"] === "POST") {
+    $email = trim($_POST['email']);
+    $password = trim($_POST['password']);
+
+    try {
+        $query = "SELECT id, pwd FROM users WHERE email = :email";
+        $stmt = $conn->prepare($query);
+        $stmt->bindParam(':email', $email);
+
+        if ($stmt->execute()) {
+            $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            if ($user && password_verify($password, $user['pwd'])) {
+                $success_msg = "Login success";
+            } else {
+                $error_msg = "Invalid email or password";
+            }
+        }
+    } catch (PDOException $e) {
+        error_log($e->getMessage());
+        $error_msg = "Something went wrong. Please try again.";
+    }
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -17,15 +46,25 @@
     
     <div class="d-flex justify-content-center align-items-center vh-100">
         <form class="p-4 border rounded shadow" method="post">
+
+            <!-- Display message -->
+            <?php if ($success_msg) { ?>
+                        <div class="alert alert-success"><?= $success_msg ?></div>
+            <?php  } ?>
+
+            <?php if ($error_msg) { ?>
+                        <div class="alert alert-danger"><?= $error_msg ?></div>
+            <?php  } ?>
+
             <h3 class="text-center mb-3">Login</h3>
             <div class="mt-3">
                 <label class="form-label">Email</label>
-                <input type="email" class="form-control" placeholder="Enter your email">
+                <input type="email" name="email" class="form-control" placeholder="Enter your email">
             </div>
 
             <div class="mt-3">
                 <label class="form-label">Password</label>
-                <input type="password" class="form-control" placeholder="Enter your password">
+                <input type="password" name="password" class="form-control" placeholder="Enter your password">
             </div>
 
             <div class="mt-3">
