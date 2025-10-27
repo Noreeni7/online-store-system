@@ -21,21 +21,30 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     }
 
     if (!$error_msg) {
-        try { 
+        try {
 
-            $query = "INSERT INTO users (name, email, password) VALUES (:name, :email, :password)";
-            $stmt = $conn->prepare($query);
-            $hashed_password = password_hash($password, PASSWORD_DEFAULT);
-            $stmt->bindParam(':name', $name);
-            $stmt->bindParam(':email', $email);
-            $stmt->bindParam(':password', $hashed_password);
-            $stmt->execute();
+            // Check if email already exists
+            $checkQuery = "SELECT id FROM users WHERE email = :email";
+            $checkStmt = $conn->prepare($checkQuery);
+            $checkStmt->bindParam(':email', $email);
+            $checkStmt->execute();
 
-            $success_msg = "Registration successful!";
-            
+            if ($checkStmt->rowCount() > 0) {
+                $error_msg = "Email already registered. Please use another email";
+            } else {
+                $query = "INSERT INTO users (name, email, password) VALUES (:name, :email, :password)";
+                $stmt = $conn->prepare($query);
+                $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+                $stmt->bindParam(':name', $name);
+                $stmt->bindParam(':email', $email);
+                $stmt->bindParam(':password', $hashed_password);
+                $stmt->execute();
+
+                $success_msg = "Registration successful!";
+            }
         } catch (PDOException $e) {
             error_log($e->getMessage());
-            $success_msg = "Something went wrong. Please try again";
+            // $error_msg = "Something went wrong. Please try again";
         }
     }
 }
