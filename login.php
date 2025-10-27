@@ -1,5 +1,6 @@
 <?php
 
+session_start();
 require_once 'includes/db_connect.php';
 
 $success_msg = "";
@@ -10,7 +11,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $password = trim($_POST['password']);
 
     try {
-        $query = "SELECT id, pwd FROM users WHERE email = :email";
+        $query = "SELECT id, name, email, pwd FROM users WHERE email = :email";
         $stmt = $conn->prepare($query);
         $stmt->bindParam(':email', $email);
 
@@ -18,7 +19,19 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
             if ($user && password_verify($password, $user['pwd'])) {
-                $success_msg = "Login success";
+
+                // Prevent session fixation
+                session_regenerate_id(true); 
+
+                // Store user info in session
+                $_SESSION['user_id'] = $user['id'];
+                $_SESSION['user_name'] = $user['name'];
+                $_SESSION['user_email'] = $user['email'];
+
+                // Redirect to dashboard or homepage
+                header("Location: index.php");
+                exit();
+                
             } else {
                 $error_msg = "Invalid email or password";
             }
