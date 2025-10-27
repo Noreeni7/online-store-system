@@ -77,25 +77,27 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             }
         ?>
 
-        <form action="" method="post">
+        <div class="d-flex justify-content-center align-items-center vh-100">
+        <form class="p-4 border rounded shadow" style="width: 30vw;">
+        <h3 class="text-center mb-3">Update product</h3>
             <div class="mt-3">
                 <label class="form-label">Product Name</label>
-                <input type="text" name="name" value="<?php echo htmlspecialchars($product['name']); ?>">
+                <input type="text" name="name" class="form-control" value="<?php echo htmlspecialchars($product['name']); ?>">
             </div>
 
             <div class="mt-3">
                 <label class="form-label">Description</label>
-               <textarea name="description"><?php echo htmlspecialchars($product['description']) ?></textarea>
+               <textarea name="description" class="form-control"><?php echo htmlspecialchars($product['description']) ?></textarea>
             </div>
 
             <div class="mt-3">
-                <label class="form-label">Price</label>
-                <input type="text" name="price" value="<?php echo htmlspecialchars($product['price']) ?>">
+                <label class="form-label">Price (Ksh)</label>
+                <input type="text" name="price" class="form-control" value="<?php echo htmlspecialchars($product['price']) ?>">
             </div>
 
             <div class="mt-3">
                 <label class="form-label">Image URL</label>
-                <input type="text" name="image" value="<?php echo htmlspecialchars($product['image']) ?>">
+                <input type="text" name="image" class="form-control" value="<?php echo htmlspecialchars($product['image']) ?>">
             </div>
 
             <button type="submit" class="btn btn-primary mt-3">Update Product</button>

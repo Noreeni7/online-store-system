@@ -47,16 +47,17 @@ try {
             <div>
                 <a href="cart.php" class="position-relative btn btn-outline-light me-2">🛒 Cart
                     <?php if ($cart_count>0): ?>
-                        <span class="position-absolute badge bg-danger"><?= $cart_count ?></span>
+                        <span class="position-absolute badge text-warning bold-100 fs-5" style="transform: translate(-40%, -17%);"><?= $cart_count ?></span>
                     <?php endif; ?>
                 </a>
                 <a href="login.php" class="btn btn-outline-light">Login</a>
+                <a href="register.php" class="btn btn-outline-light">Register</a>
             </div>
         </div>
     </nav>
 
     <!-- HERO SECTION -->
-    <div class="hero p-5 text-center rounded mb-4">
+    <div class="hero p-5 mt-5 text-center rounded mb-4 bg-info">
         <h1>Welcome to MyStore!</h1>
         <p class="lead">Find the best products.</p>
     </div>
