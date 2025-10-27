@@ -32,19 +32,29 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             if ($checkStmt->rowCount() > 0) {
                 $error_msg = "Email already registered. Please use another email";
             } else {
-                $query = "INSERT INTO users (name, email, password) VALUES (:name, :email, :password)";
+                $query = "INSERT INTO users (name, email, pwd, role, created_at) VALUES (:name, :email, :password, :role, :created_at)";
                 $stmt = $conn->prepare($query);
                 $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+                $role = 'user'; 
+                $created_at = date('Y-m-d H:i:s');
+
                 $stmt->bindParam(':name', $name);
                 $stmt->bindParam(':email', $email);
                 $stmt->bindParam(':password', $hashed_password);
-                $stmt->execute();
+                $stmt->bindParam(':role', $role);
+                $stmt->bindParam(':created_at', $created_at);
 
-                $success_msg = "Registration successful!";
+                if ($stmt->execute()) {
+                    // Redirect to login page
+                    header('Location: login.php');
+                    exit();
+                } else {
+                    $error_msg = "Something went wrong. Please try again";
+                }
             }
         } catch (PDOException $e) {
-            error_log($e->getMessage());
-            // $error_msg = "Something went wrong. Please try again";
+            // die("Database error: " . $e->getMessage());
+            $error_msg = "Something went wrong. Please try again";
         }
     }
 }

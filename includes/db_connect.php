@@ -8,7 +8,8 @@ try {
     $conn = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8",$dbusername,$dbpassword);
     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 } catch (PDOException $e) {
-    echo "Connection failed: " . $e->getMessage();
+    die("Database error: " . $e->getMessage());
+    // echo "Connection failed: " . $e->getMessage();
 }
 
 // The "charset=utf8" part ensures the database connection uses UTF-8 encoding,
