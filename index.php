@@ -46,12 +46,19 @@ try {
             <a class="navbar-brand text-white" href="#">MyStore</a>
             <div>
                 <a href="cart.php" class="position-relative btn btn-outline-light me-2">🛒 Cart
-                    <?php if ($cart_count>0): ?>
+                    <?php if ($cart_count > 0): ?>
                         <span class="position-absolute badge text-warning bold-100 fs-5" style="transform: translate(-40%, -17%);"><?= $cart_count ?></span>
                     <?php endif; ?>
                 </a>
-                <a href="login.php" class="btn btn-outline-light">Login</a>
-                <a href="register.php" class="btn btn-outline-light">Register</a>
+
+                <?php if (isset($_SESSION['user_id'])): ?>
+                    <span>Welcome <?= htmlspecialchars($_SESSION['user_name']) ?></span>
+                    <a href="logout.php" class="btn btn-outline-light">Logout</a>
+                <?php  else: ?>
+                    <a href="login.php" class="btn btn-outline-light">Login</a>
+                    <a href="register.php" class="btn btn-outline-info">Register</a>
+                <?php endif; ?>
+
             </div>
         </div>
     </nav>
