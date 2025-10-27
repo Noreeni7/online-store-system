@@ -1,5 +1,13 @@
 <?php
+
+session_start();
 require_once 'includes/db_connect.php';
+
+if (isset($_SESSION['cart'])) {
+    $cart_count = array_sum($_SESSION['cart']);
+} else {
+    $cart_count = 0;
+}
 
 try {
     $query = "SELECT * FROM products;";
@@ -33,11 +41,15 @@ try {
 <body>
 
     <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg bg-dark">
+    <nav class="navbar navbar-expand-lg bg-dark fixed-top">
         <div class="container-fluid">
             <a class="navbar-brand text-white" href="#">MyStore</a>
             <div>
-                <a href="cart.php" class="btn btn-outline-light me-2">🛒 Cart</a>
+                <a href="cart.php" class="position-relative btn btn-outline-light me-2">🛒 Cart
+                    <?php if ($cart_count>0): ?>
+                        <span class="position-absolute badge bg-danger"><?= $cart_count ?></span>
+                    <?php endif; ?>
+                </a>
                 <a href="login.php" class="btn btn-outline-light">Login</a>
             </div>
         </div>
@@ -80,3 +92,9 @@ try {
 </body>
 
 </html>
+
+
+<!-- 
+A shorthand for an if–else statement.
+condition ? value_if_true : value_if_false;
+ -->
