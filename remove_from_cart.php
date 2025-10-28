@@ -19,8 +19,8 @@ if ($id !== null) {
             error_log("Error removing item from cart: " . $e->getMessage());
         }
     } else {
-        if (isset($_SESSION['cart'][$ID])) {
-            unset($_SESSION['cart'][$ID]); // remove only from cart
+        if (isset($_SESSION['cart'][$id])) {
+            unset($_SESSION['cart'][$id]); // remove only from cart
             $_SESSION['success_msg'] = "Item removed from cart.";
         }
     }
