@@ -3,11 +3,26 @@
 session_start();
 require_once 'includes/db_connect.php';
 
-if (isset($_SESSION['cart'])) {
-    $cart_count = array_sum($_SESSION['cart']);
+$cart_count = 0;
+
+if (isset($_SESSION['user_id'])) {
+    $user_id = $_SESSION['user_id'];
+    try {
+        $query = "SELECT SUM(quantity) as total_items FROM cart WHERE user_id = :user_id";
+        $stmt = $conn->prepare($query);
+        $stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
+        $stmt->execute();
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        $cart_count = $result['total_items'] ?? 0;
+    } catch (PDOException $e) {
+        error_log($e->getMessage());
+        $cart_count = 0;
+    }
 } else {
-    $cart_count = 0;
+    // Guest user: get from session
+    $cart_count = isset($_SESSION['cart']) ? array_sum($_SESSION['cart']) : 0;
 }
+
 
 try {
     $query = "SELECT * FROM products;";
