@@ -52,7 +52,7 @@ try {
                 </a>
 
                 <?php if (isset($_SESSION['user_id'])): ?>
-                    <span>Welcome <?= htmlspecialchars($_SESSION['user_name']) ?></span>
+                    
                     <a href="logout.php" class="btn btn-outline-light">Logout</a>
                 <?php  else: ?>
                     <a href="login.php" class="btn btn-outline-light">Login</a>
@@ -65,7 +65,13 @@ try {
 
     <!-- HERO SECTION -->
     <div class="hero p-5 mt-5 text-center rounded mb-4 bg-info">
-        <h1>Welcome to MyStore!</h1>
+        <?php if (isset($_SESSION['user_id'])) { ?>
+        <span class="fs-2">Welcome <span class="text-danger"><?= htmlspecialchars($_SESSION['user_name']) ?></span></span>
+        <?php } else { ?>
+            <h1>Welcome to MyStore!</h1>
+        <?php } ?>
+        
+        
         <p class="lead">Find the best products.</p>
     </div>
 
