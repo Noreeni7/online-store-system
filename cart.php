@@ -4,28 +4,36 @@ session_start();
 
 require_once 'includes/db_connect.php';
 
+$products = [];
+$cart_items = [];
 // ================ storing the items in the user’s session ============
 $id = $_GET['id'] ?? null;
 
-// create cart if it doesn’t exist
-    if (!isset($_SESSION['cart'])) {
-    $_SESSION['cart'] = [];
-}
+// If user is logged in, load from DB
+if (isset($_SESSION['user_id'])) {
+    $user_id = $_SESSION['user_id'];
 
-// add or increment product quantity
-if ($id !== null) {
-   if (!isset($_SESSION['cart'][$id])) {
-    $_SESSION['cart'][$id] = 1;
-   } else {
-    $_SESSION['cart'][$id]++; // add one more if already in cart
-}
-}
+    try {
+        $query = "SELECT p.id, p.name, p.price, c.quantity FROM cart c JOIN products p ON c.product_id = p.id WHERE c.user_id = :user_id";
+        $stmt = $conn->prepare($query);
+        $stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
+        $stmt->execute();
 
-// ============ display the cart items (with product details from your products table). ===========
-$cart_items = $_SESSION['cart'] ?? [];
+        $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-// get all product ids in the cart
-if (!empty($cart_items)) {
+        // 🟢 Convert DB cart to session-like format for display
+        $cart_items = [];
+        foreach ($products as $p) {
+            $cart_items[$p['id']] = $p['quantity'];
+        }
+
+    } catch (PDOException $e) {
+        error_log($e->getMessage());
+    }
+} else {
+    // Guest user - use session cart
+    $cart_items = $_SESSION['cart'] ?? [];
+    if (!empty($cart_items)) {
     $ids = array_keys($cart_items);
 
     // implode(separator, array): Convert the array of product IDs into a comma-separated string for the SQL IN clause
@@ -36,11 +44,24 @@ if (!empty($cart_items)) {
     $stmt = $conn->prepare($query);
     $stmt->execute($ids);
     $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-} else {
-    $products = [];
+ }
 }
 
+
+
+// create cart if it doesn’t exist
+//     if (!isset($_SESSION['cart'])) {
+//     $_SESSION['cart'] = [];
+// }
+
+// add or increment product quantity
+// if ($id !== null) {
+//    if (!isset($_SESSION['cart'][$id])) {
+//     $_SESSION['cart'][$id] = 1;
+//    } else {
+//     $_SESSION['cart'][$id]++; // add one more if already in cart
+// }
+// }
 ?>
 
 <!DOCTYPE html>
@@ -81,7 +102,8 @@ if (!empty($cart_items)) {
                     <?php
                     $grand_total = 0;
                     foreach ($products as $product) {
-                        $quantity = $cart_items[$product['id']];
+                        // Check if user is logged in or not
+                        $quantity = isset($_SESSION['user_id']) ? $product['quantity'] : $cart_items[$product['id']];
                         $total = $quantity * $product['price'];
                         $grand_total += $total;
                     ?>
@@ -91,9 +113,9 @@ if (!empty($cart_items)) {
                             <td><?= number_format($product['price'], 2) ?></td>
                             <td><?= htmlspecialchars($quantity) ?></td>
                             <td><?= number_format($total) ?></td>
-                            <td><a href="increase_quantity.php?id=<?= $product['id'] ?>" class="">+</a></td>
-                            <td><a href="decrease_quantity.php?id=<?= $product['id'] ?>" class="">-</a></td>
-                            <td><a href="remove_from_cart.php?id=<?= $product['id'] ?>" class="btn btn-danger btn-sm">Remove</a></td>
+                            <td class="g-3"><a href="increase_quantity.php?id=<?= $product['id'] ?>" class="me-4">+</a>
+                            <a href="decrease_quantity.php?id=<?= $product['id'] ?>" class="me-4">-</a>
+                            <a href="remove_from_cart.php?id=<?= $product['id'] ?>" class="btn btn-danger btn-sm me-4">Remove</a></td>
                         </tr>
                     <?php   }
                     ?>
@@ -111,5 +133,4 @@ if (!empty($cart_items)) {
 
     </div>
 </body>
-
 </html>
