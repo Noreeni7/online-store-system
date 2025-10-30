@@ -1,7 +1,7 @@
 <?php
 require_once '../includes/db_connect.php';
 
-$id = $_GET['id'];
+$id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
 
 try {
     $query = "SELECT * FROM products WHERE id = :id;";

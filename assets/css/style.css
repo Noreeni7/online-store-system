@@ -4,6 +4,8 @@
   object-fit: cover; 
 }
 
-/* .hero{
-  background-color: rgb(190, 190, 28);
-} */
+.hero {
+background: linear-gradient(rgba(0, 0, 0, 0.85), rgba(0, 0, 0, 0.6)),
+            url('../images/hero-bg.jpg') center/cover no-repeat;
+color: #ffffff;
+}

@@ -115,7 +115,7 @@ if (isset($_SESSION['user_id'])) {
                             <td><?= number_format($total) ?></td>
                             <td class="g-3"><a href="increase_quantity.php?id=<?= $product['id'] ?>" class="me-4">+</a>
                             <a href="decrease_quantity.php?id=<?= $product['id'] ?>" class="me-4">-</a>
-                            <a href="remove_from_cart.php?id=<?= $product['id'] ?>" class="btn btn-danger btn-sm me-4">Remove</a></td>
+                            <a href="remove_from_cart.php?id=<?= $product['id'] ?>" class="btn btn-danger btn-md me-4">Remove</a></td>
                         </tr>
                     <?php   }
                     ?>
@@ -123,6 +123,7 @@ if (isset($_SESSION['user_id'])) {
                     <tr class="table-success">
                         <td colspan="3" class="text-end fw-bold">Grand Total:</td>
                         <td><?= number_format($grand_total, 2) ?></td>
+                        <td><a href="checkout.php" class="btn btn-success btn-lg me-4">Proceed to checkout</a></td>
                     </tr>
                 </tbody>
             </table>
